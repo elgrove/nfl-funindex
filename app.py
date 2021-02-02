@@ -6,10 +6,12 @@ import dash_table
 from dash.dependencies import Input, Output
 import pandas as pd
 import sqlite3
+from time import sleep
 
 conn = sqlite3.connect('data/database.db')
 cursor = conn.cursor()
 from data.gridiron_scraper.scraper import updateDB
+
 updateDB(cursor)
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -118,3 +120,5 @@ app.layout = html.Div(
 
 if __name__ == '__main__':
     app.server.run(debug=True, threaded=True, host='0.0.0.0')
+
+
