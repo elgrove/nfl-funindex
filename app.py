@@ -6,11 +6,10 @@ import dash_table
 from dash.dependencies import Input, Output
 import pandas as pd
 import sqlite3
-from time import sleep
+from data.scraper import updateDB
 
 conn = sqlite3.connect('data/database.db')
 cursor = conn.cursor()
-from data.gridiron_scraper.scraper import updateDB
 
 updateDB(cursor)
 

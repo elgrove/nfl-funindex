@@ -1,4 +1,4 @@
-from gridiron_scraper.scraper import updateDB, updateDB_year
+from scraper import updateDB, updateDB_year
 import pandas as pd
 import sqlite3
 
