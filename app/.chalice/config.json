@@ -1,0 +1,31 @@
+{
+  "version": "2.0",
+  "app_name": "nfl",
+  "api_gateway_stage": "api",
+  "automatic_layer": true,
+  "lambda_functions": {
+    "ticker_function": {
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json"
+    },
+    "manual_ticker_function": {
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json"
+    },
+    "scraper_function": {
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json"
+    },
+    "site_gen_function": {
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json"
+    }
+  },
+  "environment_variables": {
+    "SCRAPE_TARGET": "https://www.pro-football-reference.com",
+    "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
+    "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
+    "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
+    "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+  }
+}
