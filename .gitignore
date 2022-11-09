@@ -1,5 +1,11 @@
 response.json
 
+.DS_Store
+
+__pycache__/
+
+.idea/
+
 app/.chalice/deployments/
 app/.chalice/venv/
 app/.venv/*
