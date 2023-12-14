@@ -31,22 +31,22 @@
         "aws_iam_role_policy": {
             "manual_ticker_function_role": {
                 "name": "manual_ticker_function_rolePolicy",
-                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.site_bucket.arn}/*\", \"Effect\": \"Allow\"}]}",
+                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.nfl-site.arn}/*\", \"Effect\": \"Allow\"}]}",
                 "role": "${aws_iam_role.manual_ticker_function_role.id}"
             },
             "ticker_function_role": {
                 "name": "ticker_function_rolePolicy",
-                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.site_bucket.arn}/*\", \"Effect\": \"Allow\"}]}",
+                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.nfl-site.arn}/*\", \"Effect\": \"Allow\"}]}",
                 "role": "${aws_iam_role.ticker_function_role.id}"
             },
             "scraper_function_role": {
                 "name": "scraper_function_rolePolicy",
-                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.site_bucket.arn}/*\", \"Effect\": \"Allow\"}]}",
+                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.nfl-site.arn}/*\", \"Effect\": \"Allow\"}]}",
                 "role": "${aws_iam_role.scraper_function_role.id}"
             },
             "site_gen_function_role": {
                 "name": "site_gen_function_rolePolicy",
-                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.site_bucket.arn}/*\", \"Effect\": \"Allow\"}]}",
+                "policy": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"logs:CreateLogGroup\", \"Resource\": \"arn:aws:logs:eu-west-1:094758758809:*\"}, {\"Effect\": \"Allow\", \"Action\": [\"logs:CreateLogStream\", \"logs:PutLogEvents\"], \"Resource\": [\"arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*\"]}, {\"Effect\": \"Allow\", \"Sid\": \"DynamoDB\", \"Action\": [\"dynamodb:BatchGet*\", \"dynamodb:DescribeStream\", \"dynamodb:DescribeTable\", \"dynamodb:Get*\", \"dynamodb:Query\", \"dynamodb:Scan\", \"dynamodb:BatchWrite*\", \"dynamodb:CreateTable\", \"dynamodb:Delete*\", \"dynamodb:Update*\", \"dynamodb:PutItem\", \"dynamodb:ListStreams\"], \"Resource\": [\"${aws_dynamodb_table.data_table.arn}\", \"arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*\"]}, {\"Action\": [\"events:PutEvents\"], \"Resource\": \"arn:aws:events:eu-west-1:094758758809:event-bus/default\", \"Effect\": \"Allow\"}, {\"Action\": [\"s3:PutObject\", \"s3:GetObject\", \"s3:DeleteObject\"], \"Resource\": \"${aws_s3_bucket.nfl-site.arn}/*\", \"Effect\": \"Allow\"}]}",
                 "role": "${aws_iam_role.site_gen_function_role.id}"
             }
         },
@@ -67,8 +67,8 @@
                         "SCRAPE_TARGET": "https://www.pro-football-reference.com",
                         "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
                         "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
-                        "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
-                        "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+                        "SITE_BUCKET_ARN": "${aws_s3_bucket.nfl-site.arn}",
+                        "SITE_BUCKET_NAME": "${aws_s3_bucket.nfl-site.id}"
                     }
                 },
                 "layers": [
@@ -92,8 +92,8 @@
                         "SCRAPE_TARGET": "https://www.pro-football-reference.com",
                         "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
                         "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
-                        "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
-                        "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+                        "SITE_BUCKET_ARN": "${aws_s3_bucket.nfl-site.arn}",
+                        "SITE_BUCKET_NAME": "${aws_s3_bucket.nfl-site.id}"
                     }
                 },
                 "layers": [
@@ -117,8 +117,8 @@
                         "SCRAPE_TARGET": "https://www.pro-football-reference.com",
                         "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
                         "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
-                        "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
-                        "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+                        "SITE_BUCKET_ARN": "${aws_s3_bucket.nfl-site.arn}",
+                        "SITE_BUCKET_NAME": "${aws_s3_bucket.nfl-site.id}"
                     }
                 },
                 "layers": [
@@ -142,8 +142,8 @@
                         "SCRAPE_TARGET": "https://www.pro-football-reference.com",
                         "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
                         "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
-                        "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
-                        "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+                        "SITE_BUCKET_ARN": "${aws_s3_bucket.nfl-site.arn}",
+                        "SITE_BUCKET_NAME": "${aws_s3_bucket.nfl-site.id}"
                     }
                 },
                 "layers": [

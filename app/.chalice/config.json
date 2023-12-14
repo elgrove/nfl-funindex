@@ -25,7 +25,7 @@
     "SCRAPE_TARGET": "https://www.pro-football-reference.com",
     "DATA_TABLE": "${aws_dynamodb_table.data_table.name}",
     "DATA_TABLE_STREAM": "${aws_dynamodb_table.data_table.stream_arn}",
-    "SITE_BUCKET_ARN": "${aws_s3_bucket.site_bucket.arn}",
-    "SITE_BUCKET_NAME": "${aws_s3_bucket.site_bucket.id}"
+    "SITE_BUCKET_ARN": "${aws_s3_bucket.nfl-site.arn}",
+    "SITE_BUCKET_NAME": "${aws_s3_bucket.nfl-site.id}"
   }
 }

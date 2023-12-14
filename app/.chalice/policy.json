@@ -51,7 +51,7 @@
         "s3:GetObject",
         "s3:DeleteObject"
       ],
-      "Resource": "${aws_s3_bucket.site_bucket.arn}/*",
+      "Resource": "${aws_s3_bucket.nfl-site.arn}/*",
       "Effect": "Allow"
     }
   ]

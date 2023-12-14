@@ -2,6 +2,8 @@
 
 A website that scrapes data from sources and rates past NFL games on how fun they were to watch.
 
+I use Cloudflare for DNS on my domain `lgrv.net` which does not play nicely with AWS CloudFront at all, so the site is only viewable at [https://d1m1ehvj01f3jr.cloudfront.net/]() rather than something nicer.
+
 This was previously a Flask app deployed on a VPS with Docker and Nginx, but I have recently rewritten it to use serverless microservices on AWS, all defined as infrastructure-as-code, with automated, reproducible builds.
 
 ### How it works
