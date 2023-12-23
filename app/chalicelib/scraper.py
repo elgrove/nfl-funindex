@@ -1,92 +1,101 @@
-"""Scraper functions for season schedule and individual games."""
+# flake8: noqa
+# pylint: skip-file
+from dataclasses import asdict, dataclass
 import datetime as dt
-import re
+from functools import cached_property
 import math
 import os
+import re
+from time import sleep, time
 
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
 
-from .table import DataTable
-from . import LOGGER
+from chalicelib import LOGGER
 
 
-class ScheduleScraper:
-    """Functions for scraping a season schedule from source.
+@dataclass
+class GameData:
+    """Dataclass representing the front end data for a single game."""
 
-    Args:
-        season (str): season to scrape schedule of
-
-    """
-
-    def __init__(self, season=None):
-        """Initialise the class."""
-        self.season = season
-        self.scrape_target = os.environ["SCRAPE_TARGET"]
-
-    @staticmethod
-    def get_current_season():
-        """Get the current NFL season.
-
-        Returns:
-            current_season (int)
-        """
-        if dt.datetime.now().month >= 7:
-            return dt.datetime.now().year
-        return dt.datetime.now().year - 1
+    id: str
+    season_week: str
+    season: int
+    week: int
+    date: dt.date
+    time: dt.time
+    home_team: str
+    away_team: str
+    fun_index: float
 
     @property
-    def schedule_div(self):
-        """Get the main div from the current season schedule page at source.
+    def as_str_dict(self):
+        """Cast all values to strings."""
+        return {k: str(v) for k, v in asdict(self).items()}
 
-        Returns:
-            div (PageElement)
 
+class GameScraperDirector:
+    """Directs the scraping of games and storage of data in the table."""
+
+    def __init__(self, table, scraper):
+        """Initialise with dependencies.
+
+        Args:
+            table: DataTable
+            scraper: GameScraper
         """
-        req = requests.get(f"{self.scrape_target}/years/{self.season}/games.htm")
-        soup = BeautifulSoup(req.text, "lxml")
-        return soup.find("table", id="games")
+        self._table = table
+        self._scraper = scraper
 
-    @property
-    def games_with_data(self):
-        """Get game_ids that have stats published at source.
-
-        Returns:
-            game_ids (list): list of game_ids as strings
-
-        """
-        game_ids = []
-        for link in self.schedule_div.find_all("a"):
-            if link.text == "boxscore":
-                game_id = re.findall(r"\d{9}\D{3}", link.get("href"))[0]
-                game_ids.append(game_id)
-        return game_ids
+    def scrape(self):
+        """Scrapes a single game's data into the data table, rate-limiting requests to
+        15 per minute."""
+        LOGGER.info("Scraping %s", self._scraper.game_id)
+        start = time()
+        game_data = self._scraper.game_data
+        end = time()
+        self._table.write_game_data(game_data)
+        LOGGER.info("%s written to the table", self._scraper.game_id)
+        if (time_ := end - start) < 4:
+            sleep(4 - time_)
 
 
 class GameScraper:
-    """Scraper module for getting game stats and computing fun index.
+    """Scrapes a game's data from source and computes the fun index.
 
     Args:
         game_id (str): the game id to scrape
-
     """
 
     def __init__(self, game_id):
-        """Initialise the scraper class."""
-        self.scrape_target = os.environ["SCRAPE_TARGET"]
-        self.game_id = game_id
-        self.game_url = f"{self.scrape_target}/boxscores/{self.game_id}.htm"
+        """Initialise with dependencies.
 
-    @property
-    def game_dict(self):
-        """Dict containing game stats including fun index.
+        Args:
+            game_id: str
+        """
+        self.game_id = game_id
+
+    @cached_property
+    def _game_url(self):
+        """Access to the source url for the given game ID.
 
         Returns:
-            game_dict (dict): dict containing game stats
-
+            str
         """
-        res = requests.get(self.game_url)
+        return f"{os.environ['SCRAPE_TARGET']}/boxscores/{self.game_id}.htm"
+
+    @cached_property
+    def game_data(self):
+        """Returns a dict containing the game's data and its computed fun index.
+
+        *** Note for the reader ***
+        This code was written a long time ago when I was first learning to code and, while it's not pretty, it does work. Refactoring it is not a particularly attractive prospect until that fact changes, so I am carrying it as technical debt.
+
+        Returns:
+            game_dict (dict[str]): dict containing game data, all cast as strings
+        """
+        res = requests.get(self._game_url)
         # use re to escape html comments
         comm = re.compile("<!--|-->")
         soup = BeautifulSoup(comm.sub("", res.text), "lxml")
@@ -104,7 +113,6 @@ class GameScraper:
             )
         )[0]
         # length of drives table = number of drives
-        # error handling added 20.9.21 to deal with
         # cases with no data for home drives, return drives or returns
         try:
             home_drives = len(
@@ -133,7 +141,9 @@ class GameScraper:
             .findAll("div", class_="scorebox")[0]
             .findAll("div", class_="scorebox_meta")[0]
             .findAll("div")[1]
-            .text.replace("Start Time: ", "")
+            .get_text()
+            .split(": ")[1]
+            .split("\n")[0]
         )
         datestr = date_ + " " + time_
         dateobj = dt.datetime.strptime(datestr, "%A %b %d, %Y %I:%M%p")
@@ -236,9 +246,9 @@ class GameScraper:
 
         game_dict.update(
             {
-                "match_id": self.game_url[49:61],  # NOT INT
+                "match_id": self._game_url[49:61],  # NOT INT
                 "date": dateobj.date().strftime("%Y-%m-%d"),  # NOT INT
-                "time": dateobj.time().strftime("%H:%M:%S"),  # NOT INT
+                "time": dateobj.time().strftime("%H:%M"),  # NOT INT
                 "week": int(week_),
                 "season": int(season_),
                 "ot": overtime,
@@ -292,16 +302,17 @@ class GameScraper:
         rtns = game_dict["teama_rtn_td"] + game_dict["teamh_rtn_td"]
         ot = game_dict["ot"] * 0.15
 
-        game_dict = {
-            "id": game_dict["match_id"],
-            "date": dateobj.strftime("%Y-%m-%d"),
-            "time": dateobj.strftime("%H:%M"),
-            "season": str(season_),
-            "week": str(week_),
-            "away_team": game_dict["teama_name"],
-            "home_team": game_dict["teamh_name"],
-            "fun_index": str(
-                round(
+        game_data = GameData(
+            **{
+                "id": game_dict["match_id"],
+                "date": dateobj.date(),
+                "time": dateobj.time(),
+                "season": season_,
+                "week": week_,
+                "season_week": f"{season_}_{int(week_):02d}",
+                "away_team": game_dict["teama_name"],
+                "home_team": game_dict["teamh_name"],
+                "fun_index": round(
                     pts * 0.04
                     + close_q4
                     + yds * 0.0008
@@ -314,28 +325,8 @@ class GameScraper:
                     + rtns * 0.3
                     + ot,
                     2,
-                )
-            ),
-        }
+                ),
+            }
+        )
 
-        return game_dict
-
-
-class GameScraperDirector:
-    """Director pattern class for executing GameScraper.
-
-    Arg
-
-    """
-
-    def __init__(self, data_table: DataTable, game_scraper: GameScraper):
-        """Initialise the class with dependency injection of DataTable and GameScraper."""
-        self.game_scraper = game_scraper
-        self.game_id = game_scraper.game_id
-        self.data_table = data_table
-
-    def run(self):
-        """Execute command."""
-        LOGGER.info("Event received, scraping game %s", self.game_id)
-        self.data_table.table.put_item(Item=self.game_scraper.game_dict)
-        LOGGER.info("Complete")
+        return game_data.as_str_dict

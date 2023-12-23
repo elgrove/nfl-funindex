@@ -4,19 +4,20 @@
   "api_gateway_stage": "api",
   "automatic_layer": true,
   "lambda_functions": {
-    "ticker_function": {
+    "checker": {
       "autogen_policy": false,
       "iam_policy_file": "policy.json"
     },
-    "manual_ticker_function": {
+    "checker_manual": {
       "autogen_policy": false,
       "iam_policy_file": "policy.json"
     },
-    "scraper_function": {
+    "game_scraper": {
       "autogen_policy": false,
-      "iam_policy_file": "policy.json"
+      "iam_policy_file": "policy.json",
+      "reserved_concurrency": 1
     },
-    "site_gen_function": {
+    "site_generator": {
       "autogen_policy": false,
       "iam_policy_file": "policy.json"
     }
