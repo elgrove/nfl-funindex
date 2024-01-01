@@ -28,7 +28,8 @@ builds.
 - If it finds games that require scraping, it will put them in an event on the default AWS EventBridge event bus
 - Another Lambda is listening to the event bus and will scrape the game(s) into the DynamoDB table
 - The DynamoDB table has streams enabled and will send events whenever the table changes
-- A third Lambda is list
+- A third Lambda is listening to the stream events and regenerates the static HTML from the latest data
+- The static pages for the current and previous NFL week
 
 ### Installation
 

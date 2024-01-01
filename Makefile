@@ -14,7 +14,7 @@ package:
 	cd app; poetry export --without-hashes --format requirements.txt --output requirements.txt
 	cd app; poetry run chalice package --pkg-format terraform ../infra
 	python utils/terraforming.py
-	$(call merge,".[0] * .[1]"	,"app/.chalice/terraform.tf.json","./infra/chalice.tf.json","./infra/chalice.tf.json")
+	$(call merge,".[0] * .[1]"	,"./app/.chalice/additional_resources.tf.json","./infra/chalice.tf.json","./infra/chalice.tf.json")
 
 
 plan:

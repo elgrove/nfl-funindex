@@ -48,13 +48,6 @@
     },
     {
       "Action": [
-        "events:PutEvents"
-      ],
-      "Resource": "arn:aws:events:eu-west-1:${data.aws_caller_identity.current.account_id}:event-bus/default",
-      "Effect": "Allow"
-    },
-    {
-      "Action": [
         "sqs:SendMessage"
       ],
       "Resource": "${aws_sqs_queue.scraper_dlq.arn}",

@@ -68,7 +68,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/previous">Last week</a>
+                        <a class="nav-link" href="/previous.html">Last week</a>
                     </li>
                 </ul>
             </div>
