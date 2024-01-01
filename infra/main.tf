@@ -13,6 +13,9 @@ provider "aws" {
   profile = "PersonalAWSAccount"
 }
 
+data "aws_caller_identity" "current" {}
+
+
 # Create a VPC
 resource "aws_vpc" "private_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -23,9 +26,15 @@ resource "aws_dynamodb_table" "data_table" {
   billing_mode     = "PROVISIONED"
   read_capacity    = 5
   write_capacity   = 5
-  hash_key         = "id"
+  hash_key         = "season_week"
+  range_key        = "id"
   stream_enabled   = true
   stream_view_type = "NEW_IMAGE"
+
+  attribute {
+    name = "season_week"
+    type = "S"
+  }
 
   attribute {
     name = "id"
@@ -34,9 +43,15 @@ resource "aws_dynamodb_table" "data_table" {
 
 }
 
+resource "aws_sqs_queue" "scraper_dlq" {
+  name                      = "nfl-scraper-dlq"
+  message_retention_seconds = 1209600 # 14 days
+}
+
 resource "aws_s3_bucket" "nfl-site" {
   bucket = "nfl-site-8acf57f2-f8f5-4a05-ab52-4674f2837beb"
 }
+
 
 resource "aws_s3_bucket_public_access_block" "nfl-site" {
   bucket = aws_s3_bucket.nfl-site.id
@@ -82,7 +97,7 @@ data "aws_iam_policy_document" "nfl-site" {
     }
 
     condition {
-      test = "StringEquals"
+      test   = "StringEquals"
       values = [
         "arn:aws:cloudfront::${data.aws_caller_identity.chalice.account_id}:distribution/${aws_cloudfront_distribution.nfl-site.id}"
       ]
@@ -124,7 +139,6 @@ resource "aws_cloudfront_distribution" "nfl-site" {
   enabled             = true
   comment             = "nfl-site distribution"
   default_root_object = "current.html"
-  aliases             = ["nfl.lgrv.net"]
 
 
   default_cache_behavior {

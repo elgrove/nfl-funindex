@@ -1,14 +1,15 @@
 """Entry point for Chalice app."""
-
 import logging
 import os
 
 from chalice import Chalice
 
+from chalicelib.checker import Checker
+from chalicelib.publisher import EventPublisher
+from chalicelib.schedule import Schedule
+from chalicelib.scraper import GameScraper, GameScraperDirector
+from chalicelib.site_generator import HtmlRenderer, S3Bucket, SiteGenerator
 from chalicelib.table import DataTable
-from chalicelib.ticker import Ticker
-from chalicelib.sitegen import SiteGenerator
-from chalicelib.scraper import GameScraper, GameScraperDirector, ScheduleScraper
 
 app = Chalice(app_name="nfl")
 
@@ -17,29 +18,31 @@ LOGGER.setLevel(logging.INFO)
 
 
 @app.schedule("rate(2 hours)")
-def ticker_function(_event):
-    """Cron function checking for new data at source."""
-    command = Ticker(DataTable(), ScheduleScraper(ScheduleScraper.get_current_season()))
-    command.run()
+def checker(_event):
+    """Checks source for new games to scrape, puts the IDs onto EventBridge if found."""
+    checker_ = Checker(DataTable(), Schedule(), EventPublisher())
+    checker_.check()
 
 
 @app.lambda_function()
-def manual_ticker_function(_event, _context):
-    """Manually-triggered function checking for new data at source."""
-    command = Ticker(DataTable(), ScheduleScraper(ScheduleScraper.get_current_season()))
-    command.run()
+def checker_manual(_event, _context):
+    """As with checker but can be manually triggered, is not dependent on an event."""
+    checker_ = Checker(DataTable(), Schedule(), EventPublisher())
+    checker_.check()
 
 
 @app.on_cw_event({"detail-type": ["game_to_scrape"]})
-def scraper_function(event):
-    """Event-driven scraper, takes one game_id and scrapes that game into the table"""
-    game_id = event.to_dict()["detail"]["game_id"]
-    command = GameScraperDirector(DataTable(), GameScraper(game_id))
-    command.run()
+def game_scraper(event):
+    """Listens for game IDs to scrape, computes fun index and puts data to DynamoDB."""
+    game_id = event.to_dict()["detail"]["id"]
+    director = GameScraperDirector(DataTable(), GameScraper(game_id))
+    director.scrape()
 
 
 @app.on_dynamodb_record(os.environ["DATA_TABLE_STREAM"])
-def site_gen_function(_event):
-    """Event-driven site generator, updates html files in S3 on new table row."""
-    command = SiteGenerator(DataTable())
-    command.run()
+def site_generator(_event):
+    """Listens for changes to the DynamoDB table and re-generates the static site."""
+    table = DataTable()
+    renderer = HtmlRenderer(table)
+    gen = SiteGenerator(table, renderer, S3Bucket())
+    gen.generate()

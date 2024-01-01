@@ -6,10 +6,16 @@ rmvenv:
 	rm -rf app/.venv
 	rm -rf app/poetry.lock
 
+define merge
+    content=$$( jq -s $(1) $(2) $(3) ) && printf "%s" "$$content" > $(4)
+endef
+
 package:
 	cd app; poetry export --without-hashes --format requirements.txt --output requirements.txt
 	cd app; poetry run chalice package --pkg-format terraform ../infra
 	python utils/terraforming.py
+	$(call merge,".[0] * .[1]"	,"./app/.chalice/additional_resources.tf.json","./infra/chalice.tf.json","./infra/chalice.tf.json")
+
 
 plan:
 	cd infra; terraform plan

@@ -1,7 +1,8 @@
-"""Page html template string."""
+# flake8: noqa
+# pylint: skip-file
+"""Page html template string to be fed into the Templating engine."""
 
-PAGE_TEMPLATE_STRING = """
-<!DOCTYPE html>
+PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -67,7 +68,7 @@ PAGE_TEMPLATE_STRING = """
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/previous">Last week</a>
+                        <a class="nav-link" href="/previous.html">Last week</a>
                     </li>
                 </ul>
             </div>
@@ -115,7 +116,7 @@ PAGE_TEMPLATE_STRING = """
                         <td class='min'>{{ game.time }}</td>
                         <td>{{ game.away_team }}</td>
                         <td>{{ game.home_team }}</td>
-                        <td class='min'>{{ game.fun_index }}</td>
+                        <td class='min'>{{ game.fun_index | round_and_pad }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -144,5 +145,4 @@ PAGE_TEMPLATE_STRING = """
 
 </body>
 
-</html>
-"""
+</html>"""

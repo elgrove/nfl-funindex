@@ -4,7 +4,7 @@
     {
       "Effect": "Allow",
       "Action": "logs:CreateLogGroup",
-      "Resource": "arn:aws:logs:eu-west-1:094758758809:*"
+      "Resource": "arn:aws:logs:eu-west-1:${data.aws_caller_identity.current.account_id}:*"
     },
     {
       "Effect": "Allow",
@@ -13,7 +13,7 @@
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:eu-west-1:094758758809:log-group:/aws/lambda/*"
+        "arn:aws:logs:eu-west-1:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/*"
       ]
     },
     {
@@ -35,14 +35,22 @@
       ],
       "Resource": [
         "${aws_dynamodb_table.data_table.arn}",
-        "arn:aws:dynamodb:eu-west-1:094758758809:table/${aws_dynamodb_table.data_table.name}/stream/*"
+        "${aws_dynamodb_table.data_table.arn}/index/*",
+        "arn:aws:dynamodb:eu-west-1:${data.aws_caller_identity.current.account_id}:table/${aws_dynamodb_table.data_table.name}/stream/*"
       ]
     },
     {
       "Action": [
         "events:PutEvents"
       ],
-      "Resource": "arn:aws:events:eu-west-1:094758758809:event-bus/default",
+      "Resource": "arn:aws:events:eu-west-1:${data.aws_caller_identity.current.account_id}:event-bus/default",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "sqs:SendMessage"
+      ],
+      "Resource": "${aws_sqs_queue.scraper_dlq.arn}",
       "Effect": "Allow"
     },
     {
