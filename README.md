@@ -4,7 +4,7 @@ A website that scrapes data from sources and rates past NFL games on how fun the
 
 Ideally I would host this at `nfl.lgrv.net` as a subdomain of my personal domain, but I use Cloudflare for DNS which
 does not play nicely with AWS CloudFront at all, so the site is only viewable
-at [d1m1ehvj01f3jr.cloudfront.net](https://d1m1ehvj01f3jr.cloudfront.net/) rather than a pretty URL.
+at [d3tvq9qllfgr63.cloudfront.net](https://d1m1ehvj01f3jr.cloudfront.net/) rather than a pretty URL.
 
 This was previously a Flask app deployed on a VPS with Docker and Nginx, but I have recently rewritten it to use
 serverless, event-driven microservices on AWS, all defined as infrastructure-as-code, with automated, reproducible
