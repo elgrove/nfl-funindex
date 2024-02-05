@@ -6,6 +6,8 @@ rmvenv:
 	rm -rf app/.venv
 	rm -rf app/poetry.lock
 
+# merge jsons
+# 3 args, source A, source B, destination 
 define merge
     content=$$( jq -s $(1) $(2) $(3) ) && printf "%s" "$$content" > $(4)
 endef
@@ -23,11 +25,7 @@ plan:
 apply:
 	cd infra; terraform apply -auto-approve
 
-empty-s3:
-	aws s3 rm s3://nfl-site-8acf57f2-f8f5-4a05-ab52-4674f2837beb/current.html
-	aws s3 rm s3://nfl-site-8acf57f2-f8f5-4a05-ab52-4674f2837beb/previous.html
-
-destroy: empty-s3
+destroy:
 	cd infra; terraform apply -destroy -auto-approve
 
 clean:
